@@ -1,6 +1,6 @@
 import {gql, useQuery} from "@apollo/client";
 import ErrorMessage from "./ErrorMessage";
-import {Typography} from "@mui/material";
+import {Box, Stack, Typography} from "@mui/material";
 
 export const HEADLINE_QUERY = gql`
     query headline($id: ID!) {
@@ -19,6 +19,39 @@ export const HEADLINE_QUERY = gql`
         }
     }
 `;
+
+function Articles({article}) {
+    return (
+        <Box component="section"
+            key={article.id}
+            sx={{
+                marginBottom: '.5em'
+            }}
+        >
+            <Typography
+                variant="body1"
+                paragraph={true}
+                sx={{
+                    margin: 0
+                }}
+            >{article.description}</Typography>
+            <Stack direction="row" spacing={2}>
+                <a href={article.url[0]}>
+                    <Typography
+                        variant="body2"
+                        paragraph={false}
+                        sx={{margin: 0}}
+                    >{article.title}</Typography>
+                </a>
+                <Typography
+                    variant="body2"
+                    paragraph={false}
+                    sx={{margin: 0}}
+                >{article.source}</Typography>
+            </Stack>
+        </Box>
+    );
+}
 
 
 export default function HeadlinesDetails({id}) {
@@ -40,34 +73,31 @@ export default function HeadlinesDetails({id}) {
         <div>
             <Typography
                 variant="h1"
-                sx={{
-                    fontSize: '2em'
-                }}
             >{headline.title}</Typography>
-            <section>
+            <Box component="section" sx={{
+                paddingY: '1em'
+            }}>
                 <Typography
                     variant="h3"
+                    sx={{
+                        paddingBottom: '.3em'
+                    }}
                 >Summary</Typography>
                 {headline.summary.map((paragraph, index) => (
-                    <Typography paragraph={true} sx={{margin: 0}} key={index}>{paragraph}</Typography>))}
-            </section>
-            <section>
+                    <Typography paragraph={true} sx={{margin: 0}} key={index}>{paragraph}</Typography>
+                ))}
+            </Box>
+            <Box component="section">
                 <Typography
                     variant="h3"
+                    sx={{
+                        paddingBottom: '.3em'
+                    }}
                 >In Detail</Typography>
                 {headline.articles.map((article, index) => (
-                    <section key={article.id}>
-                        <Typography variant="body1" paragraph={true} sx={{margin: 0}}>{article.description}</Typography>
-                        <section>
-                            <a href={article.url[0]}>
-                                <Typography variant="body2" paragraph={false} sx={{margin: 0}}>{article.title}</Typography>
-                            </a>
-                            <Typography variant="body2" paragraph={false} sx={{margin: 0}}>{article.source}</Typography>
-                        </section>
-                    </section>
+                    <Articles key={article.id} article={article} />
                 ))}
-
-            </section>
+            </Box>
         </div>
     </section>)
 }
