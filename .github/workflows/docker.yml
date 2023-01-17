@@ -110,6 +110,7 @@ jobs:
       id-token: write
 
     steps:
+      - uses: actions/checkout@v2
       - name: Deploy
         uses: actions-hub/kubectl@master
         env:
