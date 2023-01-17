@@ -1,0 +1,79 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: traefik
+  name: webapp-cloud-eu-central-sechead-com
+  namespace: default
+spec:
+  tls:
+    - hosts:
+        - webapp.cloud-eu-central.sechead.com
+      secretName: webapp-cloud-eu-central-sechead-com-letsencrypt-tls
+  rules:
+    - host: webapp.cloud-eu-central.sechead.com
+      http:
+        paths:
+          - backend:
+              service:
+                name: webapp
+                port:
+                  number: 8080
+            path: /
+            pathType: Prefix
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+  labels:
+    service: webapp
+  name: webapp
+spec:
+  type: NodePort
+  ports:
+    - name: "3000"
+      port: 3000
+      targetPort: 3000
+  selector:
+    service: webapp
+status:
+  loadBalancer: {}
+
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  labels:
+    service: webapp
+  name: webapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: webapp
+  template:
+    metadata:
+      annotations:
+      labels:
+        service: webapp
+    spec:
+      containers:
+          image: ghcr.io/skhlv/webapp:master
+          name: webapp
+          resources:
+            requests:
+              cpu: 100m
+              memory: 50Mi
+            limits:
+              cpu: 1
+              memory: 400Mi
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: regcred
