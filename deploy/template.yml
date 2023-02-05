@@ -65,7 +65,7 @@ spec:
         service: webapp
     spec:
       containers:
-        - image: ghcr.io/skhlv/webapp:master
+        - image: ghcr.io/sechead/webapp:master
           name: webapp
           resources:
             requests:
