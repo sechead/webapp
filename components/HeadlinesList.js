@@ -5,26 +5,26 @@ import theme from "../lib/theme";
 import Link from "next/link";
 
 export const HEADLINES_QUERY = gql`
-    query headlines($from: Int!, $size: Int!) {
-        headlines(from: $from, size: $size) {
+    query headlines($offset: Int!, $limit: Int!) {
+        headlines(offset: $offset, limit: $limit) {
             size
             headlines {
                 id
                 title
                 summary
                 severity
-                articles{
-                    id
-                    description
-                    url
-                }
+#                articles{
+#                    id
+#                    description
+#                    url
+#                }
             }
         }
     }
 `
 
 export const headlinesQueryVars = {
-    from: 0, size: 10,
+    offset: 0, limit: 5,
 }
 
 function HeadlineItem({headline}) {
@@ -60,12 +60,13 @@ export default function HeadlinesList() {
     if (error) return <ErrorMessage message="Error loading headlines."/>
     if (loading && !loadingMorePosts) return <div>Loading</div>
 
-    const {headlines} = data
+    const {headlines} = data;
+    if (headlines.headlines == null) return <ErrorMessage message="Error with headlines."/>
 
     const loadMorePosts = () => {
         fetchMore({
             variables: {
-                from: headlines.length, size: 10
+                offset: headlines.length, limit: 5
             },
         })
     }

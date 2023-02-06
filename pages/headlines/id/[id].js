@@ -20,20 +20,4 @@ const HeadlinePage = () => {
     );
 }
 
-// export async function getServerSideProps({params}) {
-//     const apolloClient = initializeApollo()
-//     const id = params.id;
-//
-//     await apolloClient.query({
-//         query: HEADLINE_QUERY,
-//         variables: {
-//             id: id
-//         },
-//     })
-//
-//     return addApolloState(apolloClient, {
-//         props: {},
-//     })
-// }
-
 export default HeadlinePage

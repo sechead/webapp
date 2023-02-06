@@ -2,10 +2,11 @@ import {gql, NetworkStatus, useQuery} from '@apollo/client'
 import ErrorMessage from './ErrorMessage'
 import {Box, Typography} from "@mui/material";
 import theme from "../lib/theme";
+import {InView} from "react-intersection-observer";
 
 export const NEWS_FEED_QUERY = gql`
-    query news($from: Int!, $size: Int!) {
-        news(from: $from, size: $size) {
+    query news($offset: Int!, $limit: Int!) {
+        news(offset: $offset, limit: $limit) {
             articles {
                 id
                 date
@@ -35,7 +36,7 @@ export const NEWS_FEED_QUERY = gql`
 `
 
 export const newsFeedQueryVars = {
-    from: 0, size: 10,
+    offset: 0, limit: 5,
 }
 
 function NewsFeedItem({article}) {
@@ -68,15 +69,13 @@ export default function NewsFeed() {
 
     const {news} = data
 
-    const loadMorePosts = () => {
-        fetchMore({
+    const loadMorePosts = async () => {
+        await fetchMore({
             variables: {
-                from: news.articles.length, size: 10
+                offset: news.articles.length || 0, limit: news.articles.length + 5
             },
         })
     }
-
-    const areMorePosts = true
 
     return (
         <section>
@@ -86,7 +85,17 @@ export default function NewsFeed() {
                 marginY: '1.5em',
                 borderRadius: theme.designBasics.borderRadius
             }}>
-                {news.articles.map((article) => (<NewsFeedItem key={article.id} article={article}/>))}
+                {news.articles && news.articles.map((article) => (<NewsFeedItem key={article.id} article={article}/>))}
+                {news.articles && (
+                    <InView
+                        onChange={async (inView) => {
+                            if (inView) {
+                                await loadMorePosts();
+                            }
+                        }}
+                    />
+                )}
+                {loadingMorePosts ? 'Loading...' : ''}
             </Box>
         </section>
     )
