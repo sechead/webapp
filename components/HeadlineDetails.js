@@ -1,6 +1,7 @@
 import {gql, useQuery} from "@apollo/client";
 import ErrorMessage from "./ErrorMessage";
 import {Box, Stack, Typography} from "@mui/material";
+import theme from "../lib/theme";
 
 export const HEADLINE_QUERY = gql`
     query headline($id: ID!) {
@@ -25,6 +26,9 @@ function Articles({article}) {
         <Box component="section"
             key={article.id}
             sx={{
+                bgcolor: theme.palette.alternative.main,
+                padding: '1em',
+                borderRadius: theme.designBasics.borderRadius,
                 marginBottom: '.5em'
             }}
         >

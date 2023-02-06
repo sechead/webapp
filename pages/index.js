@@ -24,24 +24,5 @@ const IndexPage = () => {
         </App>
     );
 }
-//
-// export async function getServerSideProps() {
-//     const apolloClient = initializeApollo()
-//
-//     await Promise.all([
-//         apolloClient.query({
-//             query: HEADLINES_QUERY,
-//             variables: headlinesQueryVars,
-//         }),
-//         apolloClient.query({
-//             query: NEWS_FEED_QUERY,
-//             variables: newsFeedQueryVars,
-//         })
-//     ])
-//
-//     return addApolloState(apolloClient, {
-//         props: {},
-//     })
-// }
 
 export default IndexPage
