@@ -14,7 +14,7 @@
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "^5.11.9",
     "crypto-hash": "^2.0.1",
-    "deepmerge": "^4.3.0",
+    "deepmerge": "^4.3.1",
     "graphql": "^16.6.0",
     "lodash": "^4.17.21",
     "next": "^13.2.4",
